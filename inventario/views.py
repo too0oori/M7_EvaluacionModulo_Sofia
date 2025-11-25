@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from models import Producto, Etiqueta, Categoria, DetalleProducto
+from .models import Producto, Etiqueta, Categoria, DetalleProducto
 
 def index(request):
     productos = Producto.objects.all()
