@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Categoría{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="fw-bold text-danger mb-3">
+        ¿Eliminar categoría "{{ categoria.nombre }}"?
+    </h2>
+
+    <div class="alert alert-danger">
+        Esta acción no se puede deshacer.  
+        Todos los productos asociados quedarán sin esta categoría.
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'lista_categorias' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+
+</div>
+
+{% endblock %}
