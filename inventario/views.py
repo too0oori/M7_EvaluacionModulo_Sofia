@@ -85,3 +85,31 @@ def editar_categoria(request, categoria_id):
     else:
         return render(request, 'editar_categoria.html', {'categoria': categoria})
     
+#Vistas para etiquetas
+
+def lista_etiquetas(request):
+    etiquetas = Etiqueta.objects.all()
+    return render(request, 'lista_etiquetas.html', {'etiquetas': etiquetas})
+
+def crear_etiqueta(request):
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        Etiqueta.objects.create(nombre=nombre)
+        return render(request, 'crear_etiqueta.html', {'etiquetas': Etiqueta.objects.all()})
+    else:
+        return render(request, 'crear_etiqueta.html', {'etiquetas': Etiqueta.objects.all()})
+    
+def eliminar_etiqueta(request, etiqueta_id):
+    etiqueta = Etiqueta.objects.get(id=etiqueta_id)
+    etiqueta.delete()
+    return render(request, 'eliminar_etiqueta.html', {'etiqueta': etiqueta})
+
+def editar_etiqueta(request, etiqueta_id):
+    etiqueta = Etiqueta.objects.get(id=etiqueta_id)
+    if request.method == 'POST':
+        etiqueta.nombre = request.POST['nombre']
+        etiqueta.save()
+        return render(request, 'editar_etiqueta.html', {'etiqueta': etiqueta})
+    else:
+        return render(request, 'editar_etiqueta.html', {'etiqueta': etiqueta})
+    
