@@ -225,13 +225,16 @@ ProductManager/
 
 ---
 
-## 🖼 Capturas
+## 📸 Capturas
 
-```
-/screenshots/lista_productos.jpg
-/screenshots/login.jpg
-/screenshots/crear_producto.jpg
-```
+### Lista de productos
+![Lista de productos](screenshots/lista_productos.jpg)
+
+### Login
+![Login](screenshots/login.jpg)
+
+### Crear producto
+![Crear producto](screenshots/crear_producto.jpg)
 
 ---
 
@@ -252,3 +255,4 @@ ProductManager es un sistema completo que demuestra dominio de:
 
 ## 📄 Licencia
 Proyecto academico. Libre para estudio y aprendizaje.
+
