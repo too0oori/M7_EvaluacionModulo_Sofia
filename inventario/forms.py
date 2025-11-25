@@ -1,79 +1,48 @@
 #FORMULARIOS
 
 from django import forms
-from .models import Producto, Etiqueta, Categoria, DetalleProducto
+from .models import Producto, Etiqueta, Categoria, DetalleProducto, ProductoEtiqueta
 
 class ProductoForm(forms.ModelForm):
-    # Campos adicionales para DetalleProducto
-    dimension = forms.CharField(
-        max_length=100,
+
+    # Campo personalizado para etiquetas con orden
+    
+    etiquetas_seleccionadas = forms.ModelMultipleChoiceField(
+        queryset=Etiqueta.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
         required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Ej: 20x30x15 cm'
-        }),
-        label='Dimensiones'
-    )
-    peso = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        required=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'placeholder': '0.00',
-            'step': '0.01'
-        }),
-        label='Peso (kg)'
+        label="Etiquetas"
     )
     
     class Meta:
         model = Producto
-        fields = ['nombre', 'descripcion', 'precio', 'categoria', 'etiquetas']
+        fields = ['nombre', 'descripcion', 'precio', 'categoria']
         widgets = {
-            'nombre': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Nombre del producto'
-            }),
-            'descripcion': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 4,
-                'placeholder': 'Descripción del producto'
-            }),
-            'precio': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': '0.00',
-                'step': '0.01'
-            }),
-            'categoria': forms.Select(attrs={
-                'class': 'form-select'
-            }),
-            'etiquetas': forms.CheckboxSelectMultiple(attrs={
-                'class': 'form-check-input'
-            }),
-        }
-        labels = {
-            'nombre': 'Nombre',
-            'descripcion': 'Descripción',
-            'precio': 'Precio',
-            'categoria': 'Categoría',
-            'etiquetas': 'Etiquetas',
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'precio': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'categoria': forms.Select(attrs={'class': 'form-control'}),
         }
     
-    def save(self, commit=True):
-        producto = super().save(commit=commit)
-        
-        # Guardar o actualizar DetalleProducto
-        if self.cleaned_data.get('dimension') or self.cleaned_data.get('peso'):
-            DetalleProducto.objects.update_or_create(
-                producto=producto,
-                defaults={
-                    'dimension': self.cleaned_data.get('dimension', ''),
-                    'peso': self.cleaned_data.get('peso', 0)
-                }
-            )
-        
-        return producto
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            # Si estamos editando, cargar etiquetas actuales
+            self.fields['etiquetas_seleccionadas'].initial = self.instance.etiquetas.all()
 
+
+# Formset para manejar múltiples relaciones ProductoEtiqueta
+ProductoEtiquetaFormSet = forms.inlineformset_factory(
+    Producto,
+    ProductoEtiqueta,
+    fields=('etiqueta', 'orden'),
+    extra=1,
+    can_delete=True,
+    widgets={
+        'etiqueta': forms.Select(attrs={'class': 'form-control'}),
+        'orden': forms.NumberInput(attrs={'class': 'form-control', 'min': '0'}),
+    }
+)
 
 class EtiquetaForm(forms.ModelForm):
     class Meta:
@@ -101,5 +70,14 @@ class CategoriaForm(forms.ModelForm):
         }
         labels = {
             'nombre': 'Nombre',
+        }
+
+class DetallesProductoForm(forms.ModelForm):
+    class Meta:
+        model = DetalleProducto
+        fields = ['dimension', 'peso']
+        widgets = {
+            'dimension': forms.TextInput(attrs={'class': 'form-control'}),
+            'peso': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
 

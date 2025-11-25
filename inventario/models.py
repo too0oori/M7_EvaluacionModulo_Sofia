@@ -7,7 +7,7 @@ class Producto (models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE)
+    categoria = models.ForeignKey('Categoria', on_delete=models.CASCADE, related_name='productos')
     etiquetas = models.ManyToManyField('Etiqueta')
 
     class Meta:
@@ -43,4 +43,36 @@ class DetalleProducto (models.Model):
     peso = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.producto
+        return f"Detalles de {self.producto.nombre}"
+    
+class ProductoEtiqueta(models.Model):
+
+
+    producto = models.ForeignKey(
+        Producto, 
+        on_delete=models.CASCADE,
+        related_name='producto_etiquetas'
+    )
+
+    etiqueta = models.ForeignKey(
+        Etiqueta, 
+        on_delete=models.CASCADE,
+        related_name='producto_etiquetas'
+    )
+    
+    # Campos adicionales de la relación
+    fecha_asignacion = models.DateTimeField(auto_now_add=True)
+    # Campo de orden para prioridad de las etiquetas
+    orden = models.PositiveIntegerField(
+        default= 1,
+        help_text="Orden de prioridad de la etiqueta (1 = más importante)"
+    )
+    
+    class Meta:
+        verbose_name = "Producto-Etiqueta"
+        verbose_name_plural = "Productos-Etiquetas"
+        unique_together = ('producto', 'etiqueta') # Evita duplicados cuando se asigne una etiqueta a un producto
+        ordering = ['orden', 'fecha_asignacion']
+    
+    def __str__(self):
+        return f"{self.producto.nombre} - {self.etiqueta.nombre}"
