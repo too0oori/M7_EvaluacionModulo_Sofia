@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Producto, Etiqueta, Categoria, DetalleProducto
+from .forms import ProductoForm, CategoriaForm, EtiquetaForm
 
 def index(request):
     productos = Producto.objects.all()
@@ -11,105 +12,107 @@ def index(request):
 # Vistas para productos
 def lista_productos(request):
     productos = Producto.objects.all()
-    return render(request, 'lista_productos.html', {'productos': productos})
+    return render(request, 'productos/lista.html', {'productos': productos})
 
-def detalle_producto(request, producto_id):
-    producto = Producto.objects.get(id=producto_id)
+def detalle_producto(request, id):
+    producto = get_object_or_404(Producto, id=id)
     detalles = DetalleProducto.objects.filter(producto=producto)
-    return render(request, 'detalle_producto.html', {'producto': producto, 'detalles': detalles})
+    return render(request, 'productos/detalle.html', {'producto': producto, 'detalles': detalles})
 
 def crear_producto(request):
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        descripcion = request.POST['descripcion']
-        precio = request.POST['precio']
-        categoria_id = request.POST['categoria']
-        etiquetas = request.POST.getlist('etiquetas')
-
-        producto = Producto.objects.create(nombre=nombre, descripcion=descripcion, precio=precio, categoria_id=categoria_id)
-        producto.etiquetas.set(etiquetas)
-
-        return render(request, 'detalle_producto.html', {'producto': producto})
+        form = ProductoForm(request.POST)
+        if form.is_valid():
+            producto = form.save()
+            return redirect('detalle_producto', id=producto.id)
     else:
-        categorias = Categoria.objects.all()
-        etiquetas = Etiqueta.objects.all()
-        return render(request, 'crear_producto.html', {'categorias': categorias, 'etiquetas': etiquetas})
+        form = ProductoForm()
     
-def editar_producto(request, producto_id):
-    producto = Producto.objects.get(id=producto_id)
+    return render(request, 'productos/crear.html', {'form': form})
+    
+def editar_producto(request, id):
+    producto = get_object_or_404(Producto, id=id)
     if request.method == 'POST':
-        producto.nombre = request.POST['nombre']
-        producto.descripcion = request.POST['descripcion']
-        producto.precio = request.POST['precio']
-        producto.categoria_id = request.POST['categoria']
-        producto.etiquetas.clear()
-        producto.etiquetas.set(request.POST.getlist('etiquetas'))
-        producto.save()
-        return render(request, 'detalle_producto.html', {'producto': producto})
+        form = ProductoForm(request.POST, instance=producto)
+        if form.is_valid():
+            form.save()
+            return redirect('detalle_producto', id=producto.id)
     else:
-        categorias = Categoria.objects.all()
-        etiquetas = Etiqueta.objects.all()
-        return render(request, 'editar_producto.html', {'producto': producto, 'categorias': categorias, 'etiquetas': etiquetas})
+        form = ProductoForm(instance=producto)
     
+    return render(request, 'productos/editar.html', {'form': form, 'producto': producto})
 
-def eliminar_producto(request, producto_id):
-    producto = Producto.objects.get(id=producto_id)
-    producto.delete()
-    return render(request, 'eliminar_producto.html', {'producto': producto})
+def eliminar_producto(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    if request.method == 'POST':
+        producto.delete()
+        return redirect('lista_productos')
+    return render(request, 'productos/eliminar.html', {'producto': producto})
 
 #Vistas para categorias
 
 def lista_categorias(request):
     categorias = Categoria.objects.all()
-    return render(request, 'lista_categorias.html', {'categorias': categorias})
+    return render(request, 'categorias/lista.html', {'categorias': categorias})
 
 def crear_categoria(request):
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        Categoria.objects.create(nombre=nombre)
-        return render(request, 'crear_categoria.html', {'categorias': Categoria.objects.all()})
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_categorias')
     else:
-        return render(request, 'crear_categoria.html', {'categorias': Categoria.objects.all()})
+        form = CategoriaForm()
+    return render(request, 'categorias/formulario.html', {'form': form})
 
-def eliminar_categoria(request, categoria_id):
-    categoria = Categoria.objects.get(id=categoria_id)
-    categoria.delete()
-    return render(request, 'eliminar_categoria.html', {'categoria': categoria})
-
-def editar_categoria(request, categoria_id):
-    categoria = Categoria.objects.get(id=categoria_id)
+def editar_categoria(request, id):
+    categoria = get_object_or_404(Categoria, id=id)
     if request.method == 'POST':
-        categoria.nombre = request.POST['nombre']
-        categoria.save()
-        return render(request, 'editar_categoria.html', {'categoria': categoria})
+        form = CategoriaForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_categorias')
     else:
-        return render(request, 'editar_categoria.html', {'categoria': categoria})
+        form = CategoriaForm(instance=categoria)
+    return render(request, 'categorias/formulario.html', {'form': form, 'categoria': categoria})
+
+def eliminar_categoria(request, id):
+    categoria = get_object_or_404(Categoria, id=id)
+    if request.method == 'POST':
+        categoria.delete()
+        return redirect('lista_categorias')
+    return render(request, 'categorias/eliminar.html', {'categoria': categoria})
     
 #Vistas para etiquetas
 
 def lista_etiquetas(request):
     etiquetas = Etiqueta.objects.all()
-    return render(request, 'lista_etiquetas.html', {'etiquetas': etiquetas})
+    return render(request, 'etiquetas/lista.html', {'etiquetas': etiquetas})
 
 def crear_etiqueta(request):
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        Etiqueta.objects.create(nombre=nombre)
-        return render(request, 'crear_etiqueta.html', {'etiquetas': Etiqueta.objects.all()})
+        form = EtiquetaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_etiquetas')
     else:
-        return render(request, 'crear_etiqueta.html', {'etiquetas': Etiqueta.objects.all()})
-    
-def eliminar_etiqueta(request, etiqueta_id):
-    etiqueta = Etiqueta.objects.get(id=etiqueta_id)
-    etiqueta.delete()
-    return render(request, 'eliminar_etiqueta.html', {'etiqueta': etiqueta})
+        form = EtiquetaForm()
+    return render(request, 'etiquetas/formulario.html', {'form': form})
 
-def editar_etiqueta(request, etiqueta_id):
-    etiqueta = Etiqueta.objects.get(id=etiqueta_id)
+def editar_etiqueta(request, id):
+    etiqueta = get_object_or_404(Etiqueta, id=id)
     if request.method == 'POST':
-        etiqueta.nombre = request.POST['nombre']
-        etiqueta.save()
-        return render(request, 'editar_etiqueta.html', {'etiqueta': etiqueta})
+        form = EtiquetaForm(request.POST, instance=etiqueta)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_etiquetas')
     else:
-        return render(request, 'editar_etiqueta.html', {'etiqueta': etiqueta})
+        form = EtiquetaForm(instance=etiqueta)
+    return render(request, 'etiquetas/formulario.html', {'form': form, 'etiqueta': etiqueta})
     
+def eliminar_etiqueta(request, id):
+    etiqueta = get_object_or_404(Etiqueta, id=id)
+    if request.method == 'POST':
+        etiqueta.delete()
+        return redirect('lista_etiquetas')
+    return render(request, 'etiquetas/eliminar.html', {'etiqueta': etiqueta})

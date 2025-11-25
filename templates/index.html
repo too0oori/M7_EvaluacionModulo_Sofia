@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Sistema de Inventario{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-3 mb-4">🏪 Bienvenido al Sistema de Inventario</h1>
+    <p class="lead text-muted mb-5">Gestiona tus productos, categorías y etiquetas de manera eficiente</p>
+    
+    <div class="row g-4 mt-4">
+        <!-- Card Productos -->
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <span style="font-size: 3rem;">📦</span>
+                    </div>
+                    <h5 class="card-title">Productos</h5>
+                    <p class="card-text text-muted">Administra tu catálogo de productos completo</p>
+                    <a href="{% url 'lista_productos' %}" class="btn btn-primary">Ver Productos</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card Categorías -->
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <span style="font-size: 3rem;">📁</span>
+                    </div>
+                    <h5 class="card-title">Categorías</h5>
+                    <p class="card-text text-muted">Organiza tus productos por categorías</p>
+                    <a href="{% url 'lista_categorias' %}" class="btn btn-success">Ver Categorías</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card Etiquetas -->
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <span style="font-size: 3rem;">🏷️</span>
+                    </div>
+                    <h5 class="card-title">Etiquetas</h5>
+                    <p class="card-text text-muted">Clasifica productos con etiquetas personalizadas</p>
+                    <a href="{% url 'lista_etiquetas' %}" class="btn btn-info text-white">Ver Etiquetas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sección de acciones rápidas -->
+    <div class="mt-5 pt-4">
+        <h4 class="mb-4">Acciones Rápidas</h4>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'crear_producto' %}" class="btn btn-outline-primary btn-lg">
+                ➕ Nuevo Producto
+            </a>
+            <a href="{% url 'crear_categoria' %}" class="btn btn-outline-success btn-lg">
+                ➕ Nueva Categoría
+            </a>
+            <a href="{% url 'crear_etiqueta' %}" class="btn btn-outline-info btn-lg">
+                ➕ Nueva Etiqueta
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+    
+    .btn {
+        transition: all 0.2s;
+    }
+</style>
+{% endblock %}

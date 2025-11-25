@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 mb-5 pb-5">
+    <h2 class="mb-4">
+        ✏️ Editar Producto
+    </h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <!-- Errores generales -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <!-- Campo Nombre -->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.nombre.label }}</label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}
+                        {% for error in form.nombre.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <!-- Campo Descripción -->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.descripcion.label }}</label>
+                    {{ form.descripcion }}
+                    {% if form.descripcion.errors %}
+                        {% for error in form.descripcion.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <!-- Campo Precio -->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.precio.label }}</label>
+                    {{ form.precio }}
+                    {% if form.precio.errors %}
+                        {% for error in form.precio.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <!-- Campo Categoría -->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.categoria.label }}</label>
+                    {{ form.categoria }}
+                    {% if form.categoria.errors %}
+                        {% for error in form.categoria.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <!-- Campo Etiquetas -->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.etiquetas.label }}</label>
+                    <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto; background-color: #f8f9fa;">
+                        {% for checkbox in form.etiquetas %}
+                            <div class="form-check">
+                                {{ checkbox.tag }}
+                                <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.etiquetas.errors %}
+                        {% for error in form.etiquetas.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    <small class="text-muted">Selecciona una o más etiquetas.</small>
+                </div>
+
+                <!-- Campo Dimensiones -->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.dimension.label }}</label>
+                    {{ form.dimension }}
+                    {% if form.dimension.errors %}
+                        {% for error in form.dimension.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <small class="text-muted">Ejemplo: 20x30x15 cm</small>
+                    </div>
+
+                    <!-- Campo Peso -->
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.peso.label }}</label>
+                        {{ form.peso }}
+                        {% if form.peso.errors %}
+                            {% for error in form.peso.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <small class="text-muted">Peso en kilogramos</small>
+                    </div>
+                                
+                <!-- Botones -->
+                <button type="submit" class="btn btn-warning">
+                    <i class="fa-solid fa-save me-2"></i>Guardar Cambios
+                </button>
+                <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-secondary ms-2">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

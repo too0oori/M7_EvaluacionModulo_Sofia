@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 mb-5 pb-5">
+    <h2 class="mb-4">
+        🏷️ {% if etiqueta %}Editar{% else %}Nueva{% endif %} Etiqueta
+    </h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <!-- Errores generales -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <!-- Campo Nombre -->
+                <div class="mb-3">
+                    <label class="form-label">{{ form.nombre.label }}</label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}
+                        {% for error in form.nombre.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <!-- Botones -->
+                <button type="submit" class="btn btn-success">
+                    <i class="fa-solid fa-save me-2"></i>
+                    {% if etiqueta %}Guardar Cambios{% else %}Crear Etiqueta{% endif %}
+                </button>
+                <a href="{% url 'lista_etiquetas' %}" class="btn btn-secondary ms-2">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
