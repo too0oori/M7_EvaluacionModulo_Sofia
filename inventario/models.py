@@ -38,7 +38,7 @@ class Etiqueta (models.Model):
         return self.nombre
 
 class DetalleProducto (models.Model):
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    producto = models.OneToOneField(Producto, on_delete=models.CASCADE, related_name='detalle')
     dimension = models.CharField(max_length=100)
     peso = models.DecimalField(max_digits=10, decimal_places=2)
 

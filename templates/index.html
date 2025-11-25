@@ -1,85 +1,88 @@
 {% extends 'base.html' %}
-
-{% block title %}Inicio - Sistema de Inventario{% endblock %}
+{% block title %}Inicio - Inventario{% endblock %}
 
 {% block content %}
-<div class="text-center py-5">
-    <h1 class="display-3 mb-4">🏪 Bienvenido al Sistema de Inventario</h1>
-    <p class="lead text-muted mb-5">Gestiona tus productos, categorías y etiquetas de manera eficiente</p>
+<div class="container">
+    <!-- Hero Section -->
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="fas fa-warehouse fa-lg me-3"></i>
+            Sistema de Inventario
+        </h1>
+        <p class="lead text-muted mb-4">
+            Gestiona productos, categorías y etiquetas de forma eficiente
+        </p>
+    </div>
     
-    <div class="row g-4 mt-4">
-        <!-- Card Productos -->
+    <!-- Cards principales -->
+    <div class="row g-4 mb-5">
         <div class="col-md-4">
-            <div class="card shadow-sm h-100 border-0">
+            <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body text-center p-4">
-                    <div class="mb-3">
-                        <span style="font-size: 3rem;">📦</span>
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-box fa-2x text-primary"></i>
                     </div>
-                    <h5 class="card-title">Productos</h5>
-                    <p class="card-text text-muted">Administra tu catálogo de productos completo</p>
-                    <a href="{% url 'lista_productos' %}" class="btn btn-primary">Ver Productos</a>
+                    <h5 class="card-title fw-bold">Productos</h5>
+                    <p class="card-text text-muted">Administra tu catálogo completo</p>
+                    <a href="{% url 'lista_productos' %}" class="btn btn-primary btn-sm">
+                        Ver Productos <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
         
-        <!-- Card Categorías -->
         <div class="col-md-4">
-            <div class="card shadow-sm h-100 border-0">
+            <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body text-center p-4">
-                    <div class="mb-3">
-                        <span style="font-size: 3rem;">📁</span>
+                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-folder fa-2x text-success"></i>
                     </div>
-                    <h5 class="card-title">Categorías</h5>
-                    <p class="card-text text-muted">Organiza tus productos por categorías</p>
-                    <a href="{% url 'lista_categorias' %}" class="btn btn-success">Ver Categorías</a>
+                    <h5 class="card-title fw-bold">Categorías</h5>
+                    <p class="card-text text-muted">Organiza por categorías</p>
+                    <a href="{% url 'lista_categorias' %}" class="btn btn-success btn-sm">
+                        Ver Categorías <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
         
-        <!-- Card Etiquetas -->
         <div class="col-md-4">
-            <div class="card shadow-sm h-100 border-0">
+            <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body text-center p-4">
-                    <div class="mb-3">
-                        <span style="font-size: 3rem;">🏷️</span>
+                    <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-tags fa-2x text-info"></i>
                     </div>
-                    <h5 class="card-title">Etiquetas</h5>
-                    <p class="card-text text-muted">Clasifica productos con etiquetas personalizadas</p>
-                    <a href="{% url 'lista_etiquetas' %}" class="btn btn-info text-white">Ver Etiquetas</a>
+                    <h5 class="card-title fw-bold">Etiquetas</h5>
+                    <p class="card-text text-muted">Clasifica con etiquetas</p>
+                    <a href="{% url 'lista_etiquetas' %}" class="btn btn-info btn-sm text-white">
+                        Ver Etiquetas <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Sección de acciones rápidas -->
-    <div class="mt-5 pt-4">
-        <h4 class="mb-4">Acciones Rápidas</h4>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{% url 'crear_producto' %}" class="btn btn-outline-primary btn-lg">
-                ➕ Nuevo Producto
-            </a>
-            <a href="{% url 'crear_categoria' %}" class="btn btn-outline-success btn-lg">
-                ➕ Nueva Categoría
-            </a>
-            <a href="{% url 'crear_etiqueta' %}" class="btn btn-outline-info btn-lg">
-                ➕ Nueva Etiqueta
-            </a>
+    <!-- Acciones rápidas -->
+    <div class="card border-0 shadow-sm bg-light">
+        <div class="card-body p-4">
+            <h5 class="card-title fw-bold mb-3">
+                <i class="fas fa-bolt me-2"></i>Acciones Rápidas
+            </h5>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'crear_producto' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-plus me-1"></i>Nuevo Producto
+                </a>
+                <a href="{% url 'crear_categoria' %}" class="btn btn-outline-success">
+                    <i class="fas fa-plus me-1"></i>Nueva Categoría
+                </a>
+                <a href="{% url 'crear_etiqueta' %}" class="btn btn-outline-info">
+                    <i class="fas fa-plus me-1"></i>Nueva Etiqueta
+                </a>
+            </div>
         </div>
     </div>
 </div>
-
-<style>
-    .card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-    }
-    
-    .btn {
-        transition: all 0.2s;
-    }
-</style>
 {% endblock %}
